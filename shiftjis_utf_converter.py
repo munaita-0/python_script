@@ -1,5 +1,5 @@
 # cd target_dir/
-# python shiftjis_utf_converter.py
+# python ${path_to_file}/shiftjis_utf_converter.py
 # convert everyfile from shift-jis into utf-8
 
 import json
