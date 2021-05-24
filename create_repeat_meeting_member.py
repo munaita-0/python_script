@@ -5,7 +5,9 @@ import math
 N = 80 # 全員の数
 M = 5 # グループのメンバー数
 T = 5 # ミーティングの回数
-TRY_NUM = 200 # 試行数
+TRY_NUM = 20000 # 試行数
+
+random.shuffle([1,2,3])
 
 
 def init_score_boards() -> list[list[int]]:
@@ -18,15 +20,16 @@ def init_score_boards() -> list[list[int]]:
 def get_random_groups() -> list[list[int]]:
     members = [i for i in range(N)]
     groups = []
-    for i in range(math.ceil(N/M)):
-        group = []
-        count = 0
-        for m in random.choices(members, k=N):
-            count += 1
-            group.append(m)
-            if count == M:
-                groups.append(group)
-                group = []
+    random.shuffle(members)
+    group = []
+    count = 0
+    for m in members:
+        print(m)
+        count += 1
+        group.append(m)
+        if count % M == 0:
+            groups.append(group)
+            group = []
             
     return groups
 
