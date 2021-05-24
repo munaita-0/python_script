@@ -2,12 +2,10 @@ import random
 import copy
 import math
 
-N = 80 # 全員の数
-M = 5 # グループのメンバー数
-T = 5 # ミーティングの回数
-TRY_NUM = 20000 # 試行数
-
-random.shuffle([1,2,3])
+N = 80  # 全員の数
+M = 5  # グループのメンバー数
+T = 5  # ミーティングの回数
+TRY_NUM = 40000  # 試行数
 
 
 def init_score_boards() -> list[list[int]]:
@@ -17,6 +15,8 @@ def init_score_boards() -> list[list[int]]:
     return board
 
 # 5 x 16の配列を返す
+
+
 def get_random_groups() -> list[list[int]]:
     members = [i for i in range(N)]
     groups = []
@@ -24,16 +24,17 @@ def get_random_groups() -> list[list[int]]:
     group = []
     count = 0
     for m in members:
-        print(m)
         count += 1
         group.append(m)
         if count % M == 0:
             groups.append(group)
             group = []
-            
+
     return groups
 
 # 5 x 16 の配列をscore_boardに足し上げる
+
+
 def add_to_score_boards(boards: list[list[int]], groups: list[list[int]]) -> list[list[int]]:
     new_boards = copy.deepcopy(boards)
     for group in groups:
@@ -49,10 +50,22 @@ def add_to_score_boards(boards: list[list[int]], groups: list[list[int]]) -> lis
     return new_boards
 
 # 5 x 16 の配列 + スコア配列からsum_scoreを計算
+
+
 def get_sum_score(board: list[list[int]]):
     score = 0
     for host_score_arr in board:
         # 重みづけロジックはよしなに
+
+        # あるメンバーが同一人物と2回meetingする回数を減らす
+        if host_score_arr.count(2) == 2:
+            score = score + 30
+        elif host_score_arr.count(2) == 3:
+            score = score + 100
+        elif host_score_arr.count(2) >= 4:
+            score = score + 10000
+
+        # 同じ人と複数回meetingする回数を減らす
         for meeting_count in host_score_arr:
             if meeting_count == 5:
                 score = score + 1000000
@@ -64,6 +77,7 @@ def get_sum_score(board: list[list[int]]):
                 score = score + 10
 
     return score
+
 
 min_group_history = []
 for i in range(M):
@@ -94,6 +108,7 @@ for i in range(TRY_NUM):
 
 print('========score_board=============')
 print(min_score_board)
+print(f'score: {min_group_score}')
 
 print('========groups=============')
 for i in range(T):
